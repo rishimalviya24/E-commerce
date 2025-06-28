@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "type": "commonjs"
-
+    "dev": "nodemon server.js"
   },
   "license": "ISC",
   "dependencies": {
