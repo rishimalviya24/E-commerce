@@ -1,5 +1,3 @@
-
-const path = require('path');
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -14,8 +12,6 @@ const shopAddressRouter = require("./routes/shop/address-routes");
 const shopOrderRouter = require("./routes/shop/order-routes");
 const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
-
-const __dirname = path.resolve(); 
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
@@ -41,8 +37,6 @@ app.use(
   })
 );
 
-// Static uploads folder serve
-app.use('/uploads', express.static(path.join(__dirname, '/server/uploads')));
 
 //create a database connection -> u can also
 //create a separate file for this and then import/use that file here
