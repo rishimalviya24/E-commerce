@@ -4,8 +4,7 @@ const User = require("../../models/User");
 
 // ✅ Register
 const registerUser = async (req, res) => {
-  const { userName, email, password } = req.body;
-
+  const { userName, email, password, role } = req.body;
   try {
     const checkUser = await User.findOne({ email });
     if (checkUser) {
@@ -16,10 +15,14 @@ const registerUser = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 12);
+
+    const isFirstUser = (await User.countDocuments({})) === 0;
+
     const newUser = new User({
       userName,
       email,
       password: hashPassword,
+      role: isFirstUser ? "admin" : "user", // pehla user banega admin
     });
 
     await newUser.save();
@@ -50,7 +53,10 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
+    const checkPasswordMatch = await bcrypt.compare(
+      password,
+      checkUser.password
+    );
     if (!checkPasswordMatch) {
       return res.json({
         success: false,
@@ -69,20 +75,22 @@ const loginUser = async (req, res) => {
       { expiresIn: "60m" }
     );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,             // ✅ true on https like Render
-      sameSite: "None",         // ✅ Needed for cross-origin cookies
-    }).json({
-      success: true,
-      message: "Logged in successfully",
-      user: {
-        email: checkUser.email,
-        role: checkUser.role,
-        id: checkUser._id,
-        userName: checkUser.userName,
-      },
-    });
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: true, // ✅ true on https like Render
+        sameSite: "None", // ✅ Needed for cross-origin cookies
+      })
+      .json({
+        success: true,
+        message: "Logged in successfully",
+        user: {
+          email: checkUser.email,
+          role: checkUser.role,
+          id: checkUser._id,
+          userName: checkUser.userName,
+        },
+      });
   } catch (e) {
     console.error(e);
     res.status(500).json({
@@ -94,13 +102,15 @@ const loginUser = async (req, res) => {
 
 // ✅ Logout
 const logoutUser = (req, res) => {
-  res.clearCookie("token", {
-    sameSite: "None",
-    secure: true,
-  }).json({
-    success: true,
-    message: "Logged out successfully!",
-  });
+  res
+    .clearCookie("token", {
+      sameSite: "None",
+      secure: true,
+    })
+    .json({
+      success: true,
+      message: "Logged out successfully!",
+    });
 };
 
 // ✅ Auth Middleware
@@ -125,6 +135,5 @@ const authMiddleware = async (req, res, next) => {
     });
   }
 };
-
 
 module.exports = { registerUser, loginUser, logoutUser, authMiddleware };
