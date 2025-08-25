@@ -39,7 +39,7 @@ app.use(express.json());
 
 // ✅ Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb+srv://rishi12:hQfsTkogbTMqt9Nn@cluster0.ggqaea7.mongodb.net/")
+  .connect(process.env.MONGODB_URI || "mongodb+srv://rishi21:DPD4ttywdgG9on1s@cluster0.ggqaea7.mongodb.net/ecommerce")
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => {
     console.error("❌ MongoDB connection error:", error);
