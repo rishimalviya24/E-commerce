@@ -24,12 +24,9 @@ const PORT = process.env.PORT || 5000;
 // ✅ Enable CORS for frontend with credentials
 app.use(
   cors({
-    origin: [
-      "https://e-commerce-frontend-znmw.onrender.com",
-      "http://localhost:5173"
-    ],
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    credentials: true
+    origin: process.env.CORS_ORIGINS.split(","), // split string into array
+    methods: process.env.CORS_METHODS.split(","),
+    credentials: process.env.CORS_CREDENTIALS === "true", // convert string to boolean
   })
 );
 
